@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Party List - Spread Operator</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; }
+        .list { background: #e8f5e8; padding: 20px; border-radius: 8px; margin: 20px 0; }
+        button { padding: 10px 20px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>🎉 Party List Creator</h1>
+    
+    <button onclick="createPartyList()">Generate Party List</button>
+    
+    <div id="output"></div>
+
+    <script>
+        function createPartyList() {
+            // i. Create 2 lists and merge using SPREAD operator
+            const collegeFriends = ['Alice', 'Bob', 'Charlie', 'Diana'];
+            const workFriends = ['Eve', 'Frank', 'Grace'];
+            
+            // Add "Me" at start + merge both lists
+            const partyList = ['Me', ...collegeFriends, ...workFriends];
+            
+            // ii. Function with normal parameter + REST operator
+            function welcomeParty(vipGuest, ...otherGuests) {
+                return `
+                    <h3>Party Details:</h3>
+                    <p><strong>VIP Guest:</strong> ${vipGuest}</p>
+                    <p><strong>Total Guests:</strong> ${otherGuests.length + 1}</p>
+                    <p><strong>Full List:</strong> ${partyList.join(', ')}</p>
+                    <p><em>Others attending: ${otherGuests.slice(0, 3).join(', ')}${otherGuests.length > 3 ? ' + more' : ''}</em></p>
+                `;
+            }
+            
+            document.getElementById('output').innerHTML = welcomeParty('You', ...partyList);
+        }
+    </script>
+</body>
+</html>

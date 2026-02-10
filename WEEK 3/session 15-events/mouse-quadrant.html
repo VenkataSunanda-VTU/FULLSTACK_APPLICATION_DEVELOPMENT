@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mouse Quadrant Tracker</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            transition: background 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        #info {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.9);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 100;
+        }
+        #crosshair {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: rgba(255,255,255,0.8);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 50;
+            box-shadow: 0 0 10px rgba(255,255,255,0.8);
+        }
+        #quadrant-lines {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            width: 2px;
+            height: 100vh;
+            background: rgba(255,255,255,0.3);
+            z-index: 10;
+            transform: translateX(-50%);
+        }
+        #quadrant-lines::after {
+            content: '';
+            position: fixed;
+            top: 50%;
+            left: 0;
+            width: 100vw;
+            height: 2px;
+            background: rgba(255,255,255,0.3);
+            z-index: 10;
+            transform: translateY(-50%);
+        }
+    </style>
+</head>
+<body>
+    <div id="crosshair"></div>
+    <div id="quadrant-lines"></div>
+    
+    <div id="info">
+        <h3>🖱️ Mouse Quadrant Tracker</h3>
+        <p id="position">Move mouse around!</p>
+        <p id="quadrant">Quadrant: Center</p>
+        <p>Colors change based on mouse position</p>
+    </div>
+
+    <script>
+        const positionEl = document.getElementById('position');
+        const quadrantEl = document.getElementById('quadrant');
+        const crosshair = document.getElementById('crosshair');
+        
+        // Define quadrant colors
+        const quadrantColors = {
+            topLeft: '#667eea',
+            topRight: '#764ba2',
+            bottomLeft: '#f093fb',
+            bottomRight: '#f5576c'
+        };
+        
+        // Global mousemove event listener
+        document.addEventListener('mousemove', (e) => {
+            // Update crosshair position
+            crosshair.style.left = e.clientX + 'px';
+            crosshair.style.top = e.clientY + 'px';
+            
+            // Calculate quadrant (0.5 = center)
+            const xPercent = e.clientX / window.innerWidth;
+            const yPercent = e.clientY / window.innerHeight;
+            
+            let quadrant = 'Center';
+            let color = '#e0eafc';
+            
+            if (xPercent < 0.5 && yPercent < 0.5) {
+                quadrant = 'Top Left';
+                color = quadrantColors.topLeft;
+            } else if (xPercent >= 0.5 && yPercent < 0.5) {
+                quadrant = 'Top Right';
+                color = quadrantColors.topRight;
+            } else if (xPercent < 0.5 && yPercent >= 0.5) {
+                quadrant = 'Bottom Left';
+                color = quadrantColors.bottomLeft;
+            } else if (xPercent >= 0.5 && yPercent >= 0.5) {
+                quadrant = 'Bottom Right';
+                color = quadrantColors.bottomRight;
+            }
+            
+            // Update background color smoothly
+            document.body.style.background = color;
+            
+            // Update info display
+            positionEl.textContent = `X: ${e.clientX.toFixed(0)}px, Y: ${e.clientY.toFixed(0)}px`;
+            quadrantEl.textContent = `Quadrant: ${quadrant}`;
+        });
+    </script>
+</body>
+</html>

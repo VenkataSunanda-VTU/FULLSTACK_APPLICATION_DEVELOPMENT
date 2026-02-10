@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tantraz Registration</title>
+</head>
+<body>
+    <header>
+        <h1>Tantraz Registration</h1>
+    </header>
+    <main>
+        <form aria-labelledby="form-heading" novalidate>
+            <h2 id="form-heading">Register for Tantraz</h2>
+            
+            <!-- Full Name -->
+            <div>
+                <label for="fullname">Full Name <span aria-hidden="true">*</span>:</label>
+                <input type="text" id="fullname" name="fullname" required 
+                       placeholder="Enter your full name">
+            </div>
+
+            <!-- Email -->
+            <div>
+                <label for="email">Email <span aria-hidden="true">*</span>:</label>
+                <input type="email" id="email" name="email" required 
+                       placeholder="name@example.com">
+            </div>
+
+            <!-- Participation Category -->
+            <div>
+                <label for="category">Participation Category <span aria-hidden="true">*</span>:</label>
+                <select id="category" name="category" required>
+                    <option value="">Select category</option>
+                    <option value="individual">Individual</option>
+                    <option value="team">Team</option>
+                    <option value="audience">Audience</option>
+                </select>
+            </div>
+
+            <!-- T-shirt Size -->
+            <fieldset>
+                <legend>T-shirt Size:</legend>
+                <label><input type="radio" name="tshirt" value="s"> S</label>
+                <label><input type="radio" name="tshirt" value="m"> M</label>
+                <label><input type="radio" name="tshirt" value="l"> L</label>
+                <label><input type="radio" name="tshirt" value="xl"> XL</label>
+            </fieldset>
+
+            <!-- Technical Interests -->
+            <fieldset>
+                <legend>Technical Interests:</legend>
+                <label><input type="checkbox" name="interests" value="ai"> AI</label>
+                <label><input type="checkbox" name="interests" value="web"> Web Development</label>
+                <label><input type="checkbox" name="interests" value="cloud"> Cloud Computing</label>
+            </fieldset>
+
+            <!-- Expectations -->
+            <div>
+                <label for="expectations">Expectations/Suggestions:</label>
+                <textarea id="expectations" name="expectations" 
+                          maxlength="200" rows="4" 
+                          placeholder="Share your expectations (max 200 chars)"></textarea>
+                <small>Maximum 200 characters remaining</small>
+            </div>
+
+            <button type="submit">Register</button>
+        </form>
+    </main>
+</body>
+</html>

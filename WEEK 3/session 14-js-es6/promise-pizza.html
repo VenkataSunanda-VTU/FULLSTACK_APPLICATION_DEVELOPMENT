@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pizza Ordering with Promises</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; padding: 20px; }
+        button { padding: 12px 24px; background: #ff6b35; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
+        #status { margin: 20px 0; padding: 15px; border-radius: 5px; font-weight: bold; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    </style>
+</head>
+<body>
+    <h1>🍕 Pizza Ordering System</h1>
+    
+    <div>
+        <label>Pizza Size:</label>
+        <select id="size">
+            <option value="small">Small - $10</option>
+            <option value="medium">Medium - $15</option>
+            <option value="large">Large - $20</option>
+        </select>
+    </div>
+    
+    <button onclick="orderPizza()">Order Pizza</button>
+    <div id="status"></div>
+
+    <script>
+        function orderPizza() {
+            const size = document.getElementById('size').value;
+            const statusDiv = document.getElementById('status');
+            
+            statusDiv.textContent = 'Preparing your order...';
+            statusDiv.className = '';
+            
+            // Simulate pizza ordering with Promise
+            const pizzaOrder = new Promise((resolve, reject) => {
+                // Simulate async operation (3-6 seconds)
+                const time = Math.random() * 3000 + 3000;
+                
+                setTimeout(() => {
+                    if (Math.random() > 0.2) { // 80% success rate
+                        resolve(`Your ${size} pizza is ready! 🍕 Enjoy!`);
+                    } else {
+                        reject(`Sorry! Kitchen error - ${size} pizza unavailable.`);
+                    }
+                }, time);
+            });
+            
+            // Handle promise with then/catch
+            pizzaOrder
+                .then(message => {
+                    statusDiv.textContent = message;
+                    statusDiv.className = 'success';
+                })
+                .catch(error => {
+                    statusDiv.textContent = error;
+                    statusDiv.className = 'error';
+                });
+        }
+    </script>
+</body>
+</html>

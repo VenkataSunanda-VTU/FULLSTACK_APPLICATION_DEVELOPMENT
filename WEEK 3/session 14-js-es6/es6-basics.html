@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ES6 Basics Demo</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .demo { background: #f5f5f5; padding: 15px; margin: 10px 0; border-left: 4px solid #007cba; }
+        button { padding: 8px 16px; background: #007cba; color: white; border: none; cursor: pointer; }
+        #output { background: white; padding: 15px; border: 1px solid #ddd; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <h1>ES6 Features Demo</h1>
+
+    <div class="demo">
+        <h3>1. Score Management (let/const)</h3>
+        <p>Current Score: <span id="score">0</span></p>
+        <button onclick="updateScore()">Add Point</button>
+        <button onclick="resetScore()">Reset</button>
+    </div>
+
+    <div class="demo">
+        <h3>2. Arrow Function + Template Literals</h3>
+        <input type="number" id="price" placeholder="Price" value="25">
+        <input type="number" id="tip" placeholder="Tip %" value="15">
+        <button onclick="generateReceipt()">Generate Receipt</button>
+        <div id="receipt"></div>
+    </div>
+
+    <div class="demo">
+        <h3>3. Object & Array Destructuring</h3>
+        <button onclick="showDestructuring()">Show Destructuring</button>
+        <div id="destructuring"></div>
+    </div>
+
+    <div class="demo">
+        <h3>4. Spread & Rest Operators</h3>
+        <button onclick="createPartyList()">Create Party List</button>
+        <div id="party-list"></div>
+    </div>
+
+    <script>
+        // 1. let/const score management
+        let score = 0;
+        function updateScore() {
+            score += 1;
+            document.getElementById('score').textContent = score;
+        }
+        function resetScore() {
+            const resetValue = 0; // const for values that won't change
+            score = resetValue;
+            document.getElementById('score').textContent = score;
+        }
+
+        // 2. Arrow function with template literals
+        const generateReceipt = (price, tip) => {
+            const tipAmount = price * (tip / 100);
+            const total = price + tipAmount;
+            document.getElementById('receipt').innerHTML = 
+                `<h4>Receipt</h4>
+                 <p>Price: $${price.toFixed(2)}</p>
+                 <p>Tip (${tip}%): $${tipAmount.toFixed(2)}</p>
+                 <p><strong>Total: $${total.toFixed(2)}</strong></p>`;
+        };
+
+        // 3. Destructuring
+        function showDestructuring() {
+            // Object destructuring
+            const user = { name: 'John', age: 25, city: 'Chennai' };
+            const { name, age } = user;
+            
+            // Array destructuring  
+            const colors = ['red', 'green', 'blue'];
+            const [firstColor, secondColor] = colors;
+            
+            document.getElementById('destructuring').innerHTML = `
+                <p>Object: ${name} is ${age} years old</p>
+                <p>Array: First: ${firstColor}, Second: ${secondColor}</p>
+            `;
+        }
+
+        // 4. Spread & Rest
+        function createPartyList() {
+            const collegeFriends = ['Alice', 'Bob', 'Charlie'];
+            const workFriends = ['Diana', 'Eve'];
+            
+            // Spread operator to merge arrays + add 'Me' at start
+            const partyList = ['Me', ...collegeFriends, ...workFriends];
+            
+            // Rest operator function
+            function welcomeGuests(mainGuest, ...otherGuests) {
+                return `Welcome ${mainGuest}! Plus ${otherGuests.length} other guests.`;
+            }
+            
+            document.getElementById('party-list').innerHTML = `
+                <p>Party List: ${partyList.join(', ')}</p>
+                <p>${welcomeGuests('John', ...partyList)}</p>
+            `;
+        }
+    </script>
+</body>
+</html>

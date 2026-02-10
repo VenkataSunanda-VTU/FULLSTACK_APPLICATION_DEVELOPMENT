@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keyboard Box Movement</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+        #game-area {
+            width: 600px;
+            height: 400px;
+            border: 3px solid #fff;
+            position: relative;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+        #box {
+            width: 50px;
+            height: 50px;
+            background: #ff6b6b;
+            position: absolute;
+            border-radius: 8px;
+            transition: all 0.1s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        #instructions {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            background: rgba(0,0,0,0.5);
+            padding: 15px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        #position {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            color: white;
+            background: rgba(0,0,0,0.5);
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-area">
+        <div id="instructions">
+            Use ← ↑ → ↓ Arrow Keys to move the red box!
+        </div>
+        <div id="position">X: 0px, Y: 0px</div>
+        <div id="box"></div>
+    </div>
+
+    <script>
+        const box = document.getElementById('box');
+        const positionDisplay = document.getElementById('position');
+        const gameArea = document.getElementById('game-area');
+        
+        let boxX = 275;
+        let boxY = 175;
+        const boxSize = 50;
+        const speed = 10;
+        
+        // Set initial position
+        box.style.left = boxX + 'px';
+        box.style.top = boxY + 'px';
+        
+        // Global keyboard event listener
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'ArrowLeft':
+                    boxX = Math.max(0, boxX - speed);
+                    break;
+                case 'ArrowRight':
+                    boxX = Math.min(550 - boxSize, boxX + speed);
+                    break;
+                case 'ArrowUp':
+                    boxY = Math.max(0, boxY - speed);
+                    break;
+                case 'ArrowDown':
+                    boxY = Math.min(350 - boxSize, boxY + speed);
+                    break;
+            }
+            
+            // Update position with smooth animation
+            box.style.left = boxX + 'px';
+            box.style.top = boxY + 'px';
+            positionDisplay.textContent = `X: ${boxX}px, Y: ${boxY}px`;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-commerce Platform</title>
+</head>
+<body>
+    <header>
+        <h1>Online Store</h1>
+    </header>
+    <main>
+        <aside aria-label="Filters">
+            <h2>Filters</h2>
+            <section>
+                <h3>Price Range</h3>
+                <input type="range" min="0" max="1000" aria-label="Price slider">
+            </section>
+            <section>
+                <h3>Color Palette</h3>
+                <label><input type="checkbox" value="red"> Red</label>
+                <label><input type="checkbox" value="blue"> Blue</label>
+            </section>
+            <section>
+                <h3>Brand</h3>
+                <select aria-label="Brand select">
+                    <option>Nike</option>
+                    <option>Adidas</option>
+                </select>
+            </section>
+            <section>
+                <h3>Customer Ratings</h3>
+                <label><input type="radio" name="rating" value="5"> 5 Stars</label>
+                <label><input type="radio" name="rating" value="4"> 4 Stars</label>
+            </section>
+        </aside>
+        <section aria-label="Products">
+            <h2>Products</h2>
+            <article class="product-card">
+                <img src="product1.jpg" alt="Product 1">
+                <h3>Product 1</h3>
+                <p>$29.99 ★★★★☆</p>
+            </article>
+            <article class="product-card">
+                <img src="product2.jpg" alt="Product 2">
+                <h3>Product 2</h3>
+                <p>$49.99 ★★★★★</p>
+            </article>
+        </section>
+    </main>
+</body>
+</html>
