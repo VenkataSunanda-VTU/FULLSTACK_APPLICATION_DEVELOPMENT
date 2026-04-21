@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:text="${job.title} + ' – JobPortal'">Job Detail</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container py-4" style="max-width:860px;">
+  <div th:replace="~{fragments/navbar :: alerts}"></div>
+
+  <a th:href="@{/student/jobs}" class="btn btn-outline-secondary btn-sm mb-4">
+    <i class="bi bi-arrow-left me-1"></i>Back to Jobs
+  </a>
+
+  <!-- Job Header Card -->
+  <div class="card border-0 shadow-sm mb-4" style="border-radius:16px;overflow:hidden;">
+    <div style="background:linear-gradient(135deg,#0f3460,#1a5276);padding:2rem 2.5rem;color:#fff;">
+      <div class="d-flex align-items-start gap-4 flex-wrap">
+        <div class="avatar-circle bg-white text-primary fw-bold"
+             style="width:64px;height:64px;font-size:1.8rem;border-radius:14px;flex-shrink:0;">
+          <span th:text="${#strings.substring(job.company,0,1).toUpperCase()}"></span>
+        </div>
+        <div class="flex-grow-1">
+          <h3 class="fw-bold mb-1" th:text="${job.title}"></h3>
+          <p class="mb-2 opacity-85 fs-5" th:text="${job.company}"></p>
+          <div class="d-flex flex-wrap gap-2">
+            <span class="badge bg-white bg-opacity-20 text-white px-3 py-2">
+              <i class="bi bi-geo-alt me-1"></i><span th:text="${job.location}"></span>
+            </span>
+            <span class="badge bg-white bg-opacity-20 text-white px-3 py-2">
+              <i class="bi bi-briefcase me-1"></i><span th:text="${job.jobType}"></span>
+            </span>
+            <span th:if="${job.salary}" class="badge bg-warning text-dark px-3 py-2">
+              <i class="bi bi-currency-dollar me-1"></i><span th:text="${job.salary}"></span>
+            </span>
+            <span class="badge bg-info text-dark px-3 py-2" th:text="${job.category}"></span>
+          </div>
+        </div>
+        <div class="text-end">
+          <span class="badge badge-active px-3 py-2" th:text="${job.status}"></span>
+          <p class="text-white opacity-75 small mt-2 mb-0">
+            Posted <span th:text="${#temporals.format(job.postedAt,'dd MMM yyyy')}"></span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <!-- Description -->
+    <div class="col-lg-8">
+      <div class="card border-0 shadow-sm p-4" style="border-radius:14px;">
+        <h5 class="section-title"><i class="bi bi-file-text me-2"></i>Job Description</h5>
+        <div class="text-dark lh-lg" style="white-space:pre-line;" th:text="${job.description}"></div>
+      </div>
+    </div>
+
+    <!-- Apply Sidebar -->
+    <div class="col-lg-4">
+      <div class="card border-0 shadow-sm p-4 sticky-top" style="border-radius:14px;top:80px;">
+        <h5 class="section-title"><i class="bi bi-send me-2"></i>Apply Now</h5>
+
+        <!-- Already applied -->
+        <div th:if="${hasApplied}" class="text-center py-3">
+          <i class="bi bi-check-circle-fill text-success" style="font-size:3rem;"></i>
+          <h6 class="mt-2 fw-bold text-success">Application Submitted!</h6>
+          <p class="text-muted small">You've already applied. Track status in My Applications.</p>
+          <a th:href="@{/student/applications}" class="btn btn-outline-primary w-100">
+            <i class="bi bi-list-ul me-1"></i>Track Applications
+          </a>
+        </div>
+
+        <!-- Apply form -->
+        <div th:unless="${hasApplied}">
+          <form th:action="@{/student/jobs/{id}/apply(id=${job.id})}" method="post">
+            <div class="mb-3">
+              <label class="form-label">Cover Letter <span class="text-muted">(optional)</span></label>
+              <textarea name="coverLetter" class="form-control" rows="5"
+                        placeholder="Introduce yourself and explain why you're a great fit..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary w-100 py-2">
+              <i class="bi bi-send-fill me-2"></i>Submit Application
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer><i class="bi bi-briefcase-fill me-1"></i>JobPortal &copy; 2024. All rights reserved.</footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

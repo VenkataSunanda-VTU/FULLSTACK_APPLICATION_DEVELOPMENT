@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard – JobPortal</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container-fluid px-4 py-4">
+  <div th:replace="~{fragments/navbar :: alerts}"></div>
+
+  <!-- Header -->
+  <div class="page-header">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+      <div>
+        <h2><i class="bi bi-shield-lock me-2"></i>Admin Dashboard</h2>
+        <p class="mb-0">Full system overview and management</p>
+      </div>
+      <div class="d-flex gap-2">
+        <a th:href="@{/admin/users}" class="btn btn-warning fw-semibold">
+          <i class="bi bi-people me-1"></i>Manage Users
+        </a>
+        <a th:href="@{/admin/jobs}" class="btn btn-light fw-semibold">
+          <i class="bi bi-briefcase me-1"></i>Manage Jobs
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="row g-4 mb-4">
+    <div class="col-sm-6 col-xl-3">
+      <div class="stat-card card h-100" style="border-left:4px solid #0f3460;">
+        <div class="card-body d-flex align-items-center gap-3">
+          <div class="stat-icon bg-primary bg-opacity-10 text-primary">
+            <i class="bi bi-mortarboard-fill"></i>
+          </div>
+          <div>
+            <div class="stat-number text-primary" th:text="${totalStudents}">0</div>
+            <div class="stat-label">Total Students</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+      <div class="stat-card card h-100" style="border-left:4px solid #28a745;">
+        <div class="card-body d-flex align-items-center gap-3">
+          <div class="stat-icon bg-success bg-opacity-10 text-success">
+            <i class="bi bi-building-fill"></i>
+          </div>
+          <div>
+            <div class="stat-number text-success" th:text="${totalEmployers}">0</div>
+            <div class="stat-label">Employers</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+      <div class="stat-card card h-100" style="border-left:4px solid #f5a623;">
+        <div class="card-body d-flex align-items-center gap-3">
+          <div class="stat-icon bg-warning bg-opacity-10 text-warning">
+            <i class="bi bi-briefcase-fill"></i>
+          </div>
+          <div>
+            <div class="stat-number text-warning" th:text="${activeJobs}">0</div>
+            <div class="stat-label">Active Jobs</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+      <div class="stat-card card h-100" style="border-left:4px solid #e94560;">
+        <div class="card-body d-flex align-items-center gap-3">
+          <div class="stat-icon bg-danger bg-opacity-10 text-danger">
+            <i class="bi bi-file-earmark-text-fill"></i>
+          </div>
+          <div>
+            <div class="stat-number text-danger" th:text="${totalApplications}">0</div>
+            <div class="stat-label">Applications</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Two-column: Recent Jobs + Recent Users -->
+  <div class="row g-4">
+    <!-- Recent Jobs -->
+    <div class="col-lg-7">
+      <div class="portal-table">
+        <div class="px-4 py-3 border-bottom d-flex justify-content-between align-items-center">
+          <h6 class="section-title mb-0"><i class="bi bi-briefcase me-2"></i>Recent Job Postings</h6>
+          <a th:href="@{/admin/jobs}" class="btn btn-sm btn-outline-primary">View All</a>
+        </div>
+        <div class="table-responsive">
+          <table class="table mb-0">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Company</th>
+                <th>Posted</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:if="${recentJobs.empty}">
+                <td colspan="4" class="text-center py-4 text-muted">No jobs yet.</td>
+              </tr>
+              <tr th:each="job : ${recentJobs}">
+                <td class="fw-semibold small" th:text="${job.title}"></td>
+                <td class="small" th:text="${job.company}"></td>
+                <td class="text-muted small"
+                    th:text="${#temporals.format(job.postedAt,'dd MMM yyyy')}"></td>
+                <td>
+                  <span th:class="${'badge job-badge ' +
+                    (job.status.name() == 'ACTIVE' ? 'badge-active' : 'badge-closed')}"
+                        th:text="${job.status}"></span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Users -->
+    <div class="col-lg-5">
+      <div class="portal-table">
+        <div class="px-4 py-3 border-bottom d-flex justify-content-between align-items-center">
+          <h6 class="section-title mb-0"><i class="bi bi-people me-2"></i>Recent Users</h6>
+          <a th:href="@{/admin/users}" class="btn btn-sm btn-outline-primary">View All</a>
+        </div>
+        <div class="table-responsive">
+          <table class="table mb-0">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Role</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:if="${recentUsers.empty}">
+                <td colspan="3" class="text-center py-4 text-muted">No users yet.</td>
+              </tr>
+              <tr th:each="user : ${recentUsers}">
+                <td>
+                  <div class="d-flex align-items-center gap-2">
+                    <div class="avatar-circle bg-secondary bg-opacity-10 text-secondary fw-bold"
+                         style="width:30px;height:30px;border-radius:50%;font-size:.75rem;">
+                      <span th:text="${#strings.substring(user.name,0,1).toUpperCase()}"></span>
+                    </div>
+                    <span class="fw-semibold small" th:text="${user.name}"></span>
+                  </div>
+                </td>
+                <td>
+                  <span th:class="${'badge job-badge ' +
+                    (user.role.name() == 'ADMIN' ? 'badge-rejected' :
+                     user.role.name() == 'EMPLOYER' ? 'badge-pending' : 'badge-active')}"
+                        th:text="${user.role}"></span>
+                </td>
+                <td>
+                  <span th:if="${user.enabled}" class="badge badge-shortlisted job-badge">Active</span>
+                  <span th:unless="${user.enabled}" class="badge badge-closed job-badge">Disabled</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer><i class="bi bi-briefcase-fill me-1"></i>JobPortal &copy; 2024. All rights reserved.</footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

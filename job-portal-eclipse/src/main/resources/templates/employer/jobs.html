@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Jobs – JobPortal</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container-fluid px-4 py-4">
+  <div th:replace="~{fragments/navbar :: alerts}"></div>
+
+  <div class="page-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+    <div>
+      <h2><i class="bi bi-briefcase me-2"></i>My Job Postings</h2>
+      <p class="mb-0" th:text="'You have ' + ${jobs.size()} + ' job posting(s)'"></p>
+    </div>
+    <a th:href="@{/employer/jobs/new}" class="btn btn-warning fw-semibold px-4">
+      <i class="bi bi-plus-circle me-2"></i>Post New Job
+    </a>
+  </div>
+
+  <div th:if="${jobs.empty}" class="empty-state card border-0 shadow-sm" style="border-radius:14px;">
+    <i class="bi bi-briefcase-x"></i>
+    <h5>No job postings yet</h5>
+    <p>Start attracting talent by posting your first job.</p>
+    <a th:href="@{/employer/jobs/new}" class="btn btn-primary px-4">Post a Job</a>
+  </div>
+
+  <div th:unless="${jobs.empty}" class="portal-table">
+    <div class="table-responsive">
+      <table class="table mb-0">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Job Title</th>
+            <th>Category</th>
+            <th>Location</th>
+            <th>Type</th>
+            <th>Posted</th>
+            <th>Status</th>
+            <th class="text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="job, stat : ${jobs}">
+            <td class="text-muted small" th:text="${stat.count}"></td>
+            <td class="fw-semibold" th:text="${job.title}"></td>
+            <td><span class="badge badge-active job-badge" th:text="${job.category}"></span></td>
+            <td th:text="${job.location}"></td>
+            <td th:text="${job.jobType}"></td>
+            <td class="text-muted small"
+                th:text="${#temporals.format(job.postedAt,'dd MMM yyyy')}"></td>
+            <td>
+              <span th:class="${'badge job-badge ' +
+                (job.status.name() == 'ACTIVE' ? 'badge-active' : 'badge-closed')}"
+                    th:text="${job.status}"></span>
+            </td>
+            <td>
+              <div class="d-flex gap-1 justify-content-center flex-wrap">
+                <a th:href="@{/employer/jobs/{id}/applicants(id=${job.id})}"
+                   class="btn btn-sm btn-primary" title="Applicants">
+                  <i class="bi bi-people"></i>
+                </a>
+                <a th:href="@{/employer/jobs/{id}/edit(id=${job.id})}"
+                   class="btn btn-sm btn-outline-secondary" title="Edit">
+                  <i class="bi bi-pencil"></i>
+                </a>
+                <form th:action="@{/employer/jobs/{id}/toggle(id=${job.id})}" method="post" class="d-inline">
+                  <button type="submit" class="btn btn-sm btn-outline-warning" title="Toggle Status"
+                          onclick="return confirm('Toggle job status?')">
+                    <i class="bi bi-toggle-on"></i>
+                  </button>
+                </form>
+                <form th:action="@{/employer/jobs/{id}/delete(id=${job.id})}" method="post" class="d-inline">
+                  <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete"
+                          onclick="return confirm('Delete this job? This cannot be undone.')">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </form>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<footer><i class="bi bi-briefcase-fill me-1"></i>JobPortal &copy; 2024. All rights reserved.</footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

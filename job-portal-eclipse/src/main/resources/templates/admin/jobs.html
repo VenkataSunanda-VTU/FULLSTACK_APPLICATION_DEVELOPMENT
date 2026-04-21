@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Jobs – Admin | JobPortal</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container-fluid px-4 py-4">
+  <div th:replace="~{fragments/navbar :: alerts}"></div>
+
+  <div class="page-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+    <div>
+      <h2><i class="bi bi-briefcase me-2"></i>Manage Jobs</h2>
+      <p class="mb-0" th:text="'Total: ' + ${jobs.size()} + ' job posting(s)'"></p>
+    </div>
+    <a th:href="@{/admin/dashboard}" class="btn btn-outline-light">
+      <i class="bi bi-arrow-left me-1"></i>Dashboard
+    </a>
+  </div>
+
+  <!-- Quick filter -->
+  <div class="mb-3 d-flex gap-2 flex-wrap">
+    <button class="btn btn-sm btn-primary" onclick="filterJobs('ALL')">All</button>
+    <button class="btn btn-sm btn-outline-success" onclick="filterJobs('ACTIVE')">
+      <i class="bi bi-broadcast-pin me-1"></i>Active
+    </button>
+    <button class="btn btn-sm btn-outline-secondary" onclick="filterJobs('CLOSED')">
+      <i class="bi bi-pause-circle me-1"></i>Closed
+    </button>
+  </div>
+
+  <div th:if="${jobs.empty}" class="empty-state card border-0 shadow-sm" style="border-radius:14px;">
+    <i class="bi bi-briefcase-x"></i>
+    <h5>No jobs found</h5>
+    <p>Employers haven't posted any jobs yet.</p>
+  </div>
+
+  <div th:unless="${jobs.empty}" class="portal-table">
+    <div class="table-responsive">
+      <table class="table mb-0" id="jobsTable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Title</th>
+            <th>Company</th>
+            <th>Employer</th>
+            <th>Category</th>
+            <th>Location</th>
+            <th>Type</th>
+            <th>Posted</th>
+            <th>Status</th>
+            <th class="text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="job, stat : ${jobs}" th:data-status="${job.status}">
+            <td class="text-muted small" th:text="${stat.count}"></td>
+            <td class="fw-semibold small" th:text="${job.title}"></td>
+            <td class="small" th:text="${job.company}"></td>
+            <td class="text-muted small" th:text="${job.employer.name}"></td>
+            <td>
+              <span class="badge badge-active job-badge" th:text="${job.category}"></span>
+            </td>
+            <td class="text-muted small" th:text="${job.location}"></td>
+            <td class="small" th:text="${job.jobType}"></td>
+            <td class="text-muted small"
+                th:text="${#temporals.format(job.postedAt,'dd MMM yyyy')}"></td>
+            <td>
+              <span th:class="${'badge job-badge ' +
+                (job.status.name() == 'ACTIVE' ? 'badge-active' : 'badge-closed')}"
+                    th:text="${job.status}"></span>
+            </td>
+            <td>
+              <div class="d-flex gap-1 justify-content-center">
+                <form th:action="@{/admin/jobs/{id}/delete(id=${job.id})}" method="post">
+                  <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete Job"
+                          onclick="return confirm('Delete this job? All applications will be removed too.')">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </form>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<footer><i class="bi bi-briefcase-fill me-1"></i>JobPortal &copy; 2024. All rights reserved.</footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  function filterJobs(status) {
+    const rows = document.querySelectorAll('#jobsTable tbody tr[data-status]');
+    rows.forEach(row => {
+      row.style.display = (status === 'ALL' || row.dataset.status === status) ? '' : 'none';
+    });
+  }
+</script>
+</body>
+</html>

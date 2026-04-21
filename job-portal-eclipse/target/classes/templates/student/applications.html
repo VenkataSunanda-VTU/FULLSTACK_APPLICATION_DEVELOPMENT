@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Applications – JobPortal</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container-fluid px-4 py-4">
+  <div th:replace="~{fragments/navbar :: alerts}"></div>
+
+  <div class="page-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+    <div>
+      <h2><i class="bi bi-file-earmark-text me-2"></i>My Applications</h2>
+      <p class="mb-0" th:text="'You have applied to ' + ${applications.size()} + ' job(s)'"></p>
+    </div>
+    <a th:href="@{/student/jobs}" class="btn btn-warning fw-semibold">
+      <i class="bi bi-search me-1"></i>Browse More Jobs
+    </a>
+  </div>
+
+  <!-- Empty state -->
+  <div th:if="${applications.empty}" class="empty-state card border-0 shadow-sm" style="border-radius:14px;">
+    <i class="bi bi-inbox"></i>
+    <h5>No applications yet</h5>
+    <p>Start applying to jobs to track your progress here.</p>
+    <a th:href="@{/student/jobs}" class="btn btn-primary px-4">Browse Jobs</a>
+  </div>
+
+  <!-- Applications Table -->
+  <div th:unless="${applications.empty}" class="portal-table">
+    <div class="table-responsive">
+      <table class="table mb-0">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Job Title</th>
+            <th>Company</th>
+            <th>Location</th>
+            <th>Job Type</th>
+            <th>Applied On</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="app, stat : ${applications}">
+            <td class="text-muted small" th:text="${stat.count}"></td>
+            <td class="fw-semibold" th:text="${app.job.title}"></td>
+            <td>
+              <div class="d-flex align-items-center gap-2">
+                <div class="avatar-circle bg-primary bg-opacity-10 text-primary"
+                     style="width:30px;height:30px;border-radius:8px;font-size:.75rem;font-weight:700;">
+                  <span th:text="${#strings.substring(app.job.company,0,1).toUpperCase()}"></span>
+                </div>
+                <span th:text="${app.job.company}"></span>
+              </div>
+            </td>
+            <td th:text="${app.job.location}"></td>
+            <td>
+              <span class="badge badge-active job-badge" th:text="${app.job.jobType}"></span>
+            </td>
+            <td class="text-muted small"
+                th:text="${#temporals.format(app.appliedAt,'dd MMM yyyy')}"></td>
+            <td>
+              <span th:class="${'badge job-badge ' +
+                (app.status.name() == 'PENDING' ? 'badge-pending' :
+                 app.status.name() == 'SHORTLISTED' ? 'badge-shortlisted' : 'badge-rejected')}"
+                    th:text="${app.status}"></span>
+            </td>
+            <td>
+              <a th:href="@{/student/jobs/{id}(id=${app.job.id})}"
+                 class="btn btn-sm btn-outline-primary">
+                <i class="bi bi-eye me-1"></i>View Job
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<footer><i class="bi bi-briefcase-fill me-1"></i>JobPortal &copy; 2024. All rights reserved.</footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Users – Admin | JobPortal</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container-fluid px-4 py-4">
+  <div th:replace="~{fragments/navbar :: alerts}"></div>
+
+  <div class="page-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+    <div>
+      <h2><i class="bi bi-people me-2"></i>Manage Users</h2>
+      <p class="mb-0" th:text="'Total: ' + ${users.size()} + ' registered user(s)'"></p>
+    </div>
+    <a th:href="@{/admin/dashboard}" class="btn btn-outline-light">
+      <i class="bi bi-arrow-left me-1"></i>Dashboard
+    </a>
+  </div>
+
+  <!-- Filter tabs -->
+  <div class="mb-3 d-flex gap-2 flex-wrap">
+    <button class="btn btn-sm btn-primary active" onclick="filterTable('ALL')">All</button>
+    <button class="btn btn-sm btn-outline-primary" onclick="filterTable('STUDENT')">
+      <i class="bi bi-mortarboard me-1"></i>Students
+    </button>
+    <button class="btn btn-sm btn-outline-warning" onclick="filterTable('EMPLOYER')">
+      <i class="bi bi-building me-1"></i>Employers
+    </button>
+    <button class="btn btn-sm btn-outline-danger" onclick="filterTable('ADMIN')">
+      <i class="bi bi-shield me-1"></i>Admins
+    </button>
+  </div>
+
+  <div class="portal-table">
+    <div class="table-responsive">
+      <table class="table mb-0" id="usersTable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Role</th>
+            <th>Company</th>
+            <th>Registered</th>
+            <th>Status</th>
+            <th class="text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:if="${users.empty}">
+            <td colspan="9" class="text-center py-5 text-muted">No users found.</td>
+          </tr>
+          <tr th:each="user, stat : ${users}" th:data-role="${user.role}">
+            <td class="text-muted small" th:text="${stat.count}"></td>
+            <td>
+              <div class="d-flex align-items-center gap-2">
+                <div class="avatar-circle fw-bold"
+                     th:classappend="${user.role.name() == 'ADMIN'} ? 'bg-danger bg-opacity-10 text-danger' :
+                                     (${user.role.name() == 'EMPLOYER'} ? 'bg-warning bg-opacity-10 text-warning' : 'bg-primary bg-opacity-10 text-primary')"
+                     style="width:34px;height:34px;border-radius:50%;font-size:.8rem;">
+                  <span th:text="${#strings.substring(user.name,0,1).toUpperCase()}"></span>
+                </div>
+                <span class="fw-semibold small" th:text="${user.name}"></span>
+              </div>
+            </td>
+            <td class="small" th:text="${user.email}"></td>
+            <td class="text-muted small" th:text="${user.phone ?: '—'}"></td>
+            <td>
+              <span th:class="${'badge job-badge ' +
+                (user.role.name() == 'ADMIN' ? 'badge-rejected' :
+                 user.role.name() == 'EMPLOYER' ? 'badge-pending' : 'badge-active')}"
+                    th:text="${user.role}"></span>
+            </td>
+            <td class="text-muted small" th:text="${user.company ?: '—'}"></td>
+            <td class="text-muted small"
+                th:text="${#temporals.format(user.createdAt,'dd MMM yyyy')}"></td>
+            <td>
+              <span th:if="${user.enabled}" class="badge badge-shortlisted job-badge">Active</span>
+              <span th:unless="${user.enabled}" class="badge badge-closed job-badge">Disabled</span>
+            </td>
+            <td>
+              <div class="d-flex gap-1 justify-content-center">
+                <!-- Toggle status (don't allow disabling admin ID 1) -->
+                <form th:action="@{/admin/users/{id}/toggle(id=${user.id})}" method="post">
+                  <button type="submit" class="btn btn-sm btn-outline-warning"
+                          th:title="${user.enabled} ? 'Disable User' : 'Enable User'"
+                          onclick="return confirm('Toggle this user\'s status?')">
+                    <i class="bi" th:classappend="${user.enabled} ? 'bi-lock' : 'bi-unlock'"></i>
+                  </button>
+                </form>
+                <!-- Delete -->
+                <form th:action="@{/admin/users/{id}/delete(id=${user.id})}" method="post">
+                  <button type="submit" class="btn btn-sm btn-outline-danger"
+                          title="Delete User"
+                          onclick="return confirm('Permanently delete this user? This cannot be undone.')">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </form>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<footer><i class="bi bi-briefcase-fill me-1"></i>JobPortal &copy; 2024. All rights reserved.</footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  function filterTable(role) {
+    const rows = document.querySelectorAll('#usersTable tbody tr[data-role]');
+    rows.forEach(row => {
+      row.style.display = (role === 'ALL' || row.dataset.role === role) ? '' : 'none';
+    });
+    // Update active button
+    document.querySelectorAll('.btn[onclick^="filterTable"]').forEach(b => {
+      b.classList.remove('btn-primary','btn-warning','btn-danger','active');
+      b.classList.add(b.textContent.includes('Student') ? 'btn-outline-primary' :
+                      b.textContent.includes('Employer') ? 'btn-outline-warning' :
+                      b.textContent.includes('Admin') ? 'btn-outline-danger' : 'btn-outline-primary');
+    });
+  }
+</script>
+</body>
+</html>

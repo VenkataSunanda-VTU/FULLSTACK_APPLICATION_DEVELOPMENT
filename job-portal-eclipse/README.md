@@ -1,0 +1,225 @@
+# 🧑‍💼 Job Portal Management System
+
+A full-stack **Job Portal** built with **Spring Boot 3**, **Spring Security**, **JPA/Hibernate**, **MySQL**, and **Thymeleaf + Bootstrap 5**.
+
+---
+
+## 🗂️ Project Structure
+
+```
+job-portal/
+├── pom.xml
+├── db-setup.sql
+└── src/main/
+    ├── java/com/jobportal/
+    │   ├── JobPortalApplication.java
+    │   ├── config/
+    │   │   ├── SecurityConfig.java          ← Spring Security (role-based)
+    │   │   └── DataInitializer.java         ← Seeds default admin
+    │   ├── controller/
+    │   │   ├── HomeController.java
+    │   │   ├── AuthController.java          ← Register / Login
+    │   │   ├── StudentController.java       ← Browse jobs, apply, track
+    │   │   ├── EmployerController.java      ← Post jobs, manage applicants
+    │   │   └── AdminController.java         ← Manage users & jobs
+    │   ├── service/
+    │   │   ├── CustomUserDetailsService.java
+    │   │   ├── UserService.java
+    │   │   ├── JobService.java
+    │   │   └── ApplicationService.java
+    │   ├── repository/
+    │   │   ├── UserRepository.java
+    │   │   ├── JobRepository.java
+    │   │   └── ApplicationRepository.java
+    │   ├── model/
+    │   │   ├── User.java                    ← @Entity
+    │   │   ├── Job.java                     ← @Entity
+    │   │   ├── Application.java             ← @Entity
+    │   │   ├── Role.java                    ← STUDENT | EMPLOYER | ADMIN
+    │   │   ├── JobStatus.java               ← ACTIVE | CLOSED
+    │   │   └── ApplicationStatus.java       ← PENDING | SHORTLISTED | REJECTED
+    │   └── dto/
+    │       ├── UserRegistrationDto.java
+    │       └── JobDto.java
+    └── resources/
+        ├── application.properties
+        ├── static/css/style.css
+        └── templates/
+            ├── fragments/navbar.html
+            ├── auth/        (login, register, access-denied)
+            ├── student/     (dashboard, jobs, job-detail, applications, profile)
+            ├── employer/    (dashboard, jobs, job-form, applicants, profile)
+            └── admin/       (dashboard, users, jobs)
+```
+
+---
+
+## ✅ Prerequisites
+
+| Tool | Version |
+|------|---------|
+| Java (JDK) | 17 or higher |
+| Maven | 3.8+ |
+| MySQL | 8.0+ |
+
+---
+
+## 🚀 How to Run (Step-by-Step)
+
+### Step 1 — Clone or extract the project
+
+```bash
+# If downloaded as a zip:
+unzip job-portal.zip
+cd job-portal
+```
+
+### Step 2 — Setup MySQL database
+
+Log into MySQL and run the setup script:
+
+```bash
+mysql -u root -p < db-setup.sql
+```
+
+Or manually:
+
+```sql
+CREATE DATABASE IF NOT EXISTS job_portal_db CHARACTER SET utf8mb4;
+```
+
+### Step 3 — Configure database credentials
+
+Open `src/main/resources/application.properties` and update:
+
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/job_portal_db?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+spring.datasource.username=root
+spring.datasource.password=YOUR_MYSQL_PASSWORD_HERE
+```
+
+Replace `YOUR_MYSQL_PASSWORD_HERE` with your actual MySQL password.
+
+### Step 4 — Build and Run
+
+```bash
+# Option A: Using Maven Wrapper
+./mvnw spring-boot:run
+
+# Option B: Using installed Maven
+mvn spring-boot:run
+
+# Option C: Build JAR then run
+mvn clean package -DskipTests
+java -jar target/job-portal-1.0.0.jar
+```
+
+### Step 5 — Open in Browser
+
+```
+http://localhost:8080
+```
+
+---
+
+## 🔑 Default Credentials
+
+| Role | Email | Password |
+|------|-------|----------|
+| **Admin** | admin@jobportal.com | admin123 |
+| **Student** | Register at /auth/register (select Student) | — |
+| **Employer** | Register at /auth/register (select Employer) | — |
+
+> The admin account is auto-created on first startup by `DataInitializer.java`.
+
+---
+
+## 🧭 URL Reference
+
+| Role | URL | Description |
+|------|-----|-------------|
+| Public | `/auth/login` | Login page |
+| Public | `/auth/register` | Registration page |
+| Student | `/student/dashboard` | Student home |
+| Student | `/student/jobs` | Browse & search jobs |
+| Student | `/student/jobs/{id}` | Job detail + apply |
+| Student | `/student/applications` | Track applications |
+| Student | `/student/profile` | Edit profile |
+| Employer | `/employer/dashboard` | Employer home |
+| Employer | `/employer/jobs` | My job listings |
+| Employer | `/employer/jobs/new` | Post a new job |
+| Employer | `/employer/jobs/{id}/edit` | Edit job |
+| Employer | `/employer/jobs/{id}/applicants` | View & manage applicants |
+| Admin | `/admin/dashboard` | Admin home |
+| Admin | `/admin/users` | Manage all users |
+| Admin | `/admin/jobs` | Manage all jobs |
+
+---
+
+## 🗄️ Database Schema (Auto-generated by Hibernate)
+
+```
+users          → id, name, email, password, role, phone, company, resume_summary, enabled, created_at
+jobs           → id, title, description, company, location, salary, job_type, category, status, posted_at, employer_id
+applications   → id, job_id, student_id, cover_letter, status, applied_at
+               → UNIQUE constraint on (job_id, student_id) — prevents duplicate applications
+```
+
+---
+
+## 🔒 Security Design
+
+- **BCrypt** password encoding
+- **Role-based URL protection** via `SecurityConfig`
+  - `/student/**` → `ROLE_STUDENT` only
+  - `/employer/**` → `ROLE_EMPLOYER` only
+  - `/admin/**` → `ROLE_ADMIN` only
+- **Custom login success handler** redirects to role-specific dashboard
+- Session invalidated on logout
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Backend | Spring Boot 3.2, Spring MVC |
+| Security | Spring Security 6 |
+| Persistence | Spring Data JPA, Hibernate |
+| Database | MySQL 8 |
+| Frontend | Thymeleaf, Bootstrap 5.3, Bootstrap Icons |
+| Build | Maven |
+| Java | JDK 17 |
+
+---
+
+## 💡 Troubleshooting
+
+**❌ `Access denied for user 'root'@'localhost'`**
+→ Check your password in `application.properties`
+
+**❌ `Communications link failure`**
+→ Make sure MySQL is running: `sudo systemctl start mysql`
+
+**❌ Port 8080 already in use**
+→ Change `server.port=8081` in `application.properties`
+
+**❌ `java.lang.UnsupportedClassVersionError`**
+→ You need JDK 17+. Run `java -version` to check.
+
+---
+
+## 📸 Feature Summary
+
+| Feature | Student | Employer | Admin |
+|---------|---------|----------|-------|
+| Register / Login | ✅ | ✅ | ✅ |
+| Browse & Search Jobs | ✅ | — | — |
+| Apply to Jobs | ✅ | — | — |
+| Track Application Status | ✅ | — | — |
+| Post / Edit / Delete Jobs | — | ✅ | — |
+| View Applicants | — | ✅ | — |
+| Shortlist / Reject Applicants | — | ✅ | — |
+| Manage All Users | — | — | ✅ |
+| Manage All Jobs | — | — | ✅ |
+| Enable / Disable Accounts | — | — | ✅ |

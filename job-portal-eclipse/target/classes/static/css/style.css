@@ -1,0 +1,244 @@
+/* =============================================
+   Job Portal – Global Styles
+   ============================================= */
+
+:root {
+  --primary: #0f3460;
+  --secondary: #16213e;
+  --accent: #e94560;
+  --warning: #f5a623;
+  --success: #28a745;
+  --light-bg: #f4f7fe;
+  --card-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  --hover-shadow: 0 8px 30px rgba(0,0,0,0.15);
+  --border-radius: 12px;
+  --transition: all 0.3s ease;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background-color: var(--light-bg);
+  color: #2d3436;
+  min-height: 100vh;
+}
+
+/* ---- Navbar ---- */
+.navbar { min-height: 64px; }
+.navbar-brand { font-size: 1.5rem; letter-spacing: -0.5px; }
+.nav-link { font-weight: 500; transition: var(--transition); border-radius: 8px; }
+.nav-link:hover { background: rgba(255,255,255,0.1) !important; }
+
+/* ---- Stat Cards ---- */
+.stat-card {
+  border: none;
+  border-radius: var(--border-radius);
+  box-shadow: var(--card-shadow);
+  transition: var(--transition);
+  overflow: hidden;
+  position: relative;
+}
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--hover-shadow);
+}
+.stat-card .card-body { padding: 1.5rem; }
+.stat-card .stat-icon {
+  width: 56px; height: 56px;
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.6rem;
+}
+.stat-card .stat-number {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+.stat-card .stat-label {
+  font-size: 0.85rem;
+  color: #6c757d;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ---- Job Cards ---- */
+.job-card {
+  border: none;
+  border-radius: var(--border-radius);
+  box-shadow: var(--card-shadow);
+  transition: var(--transition);
+  background: #fff;
+}
+.job-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--hover-shadow);
+}
+.job-card .card-body { padding: 1.4rem; }
+.job-badge {
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+/* ---- Tables ---- */
+.portal-table {
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--card-shadow);
+  background: #fff;
+}
+.portal-table thead {
+  background: linear-gradient(135deg, var(--primary), #1a5276);
+  color: #fff;
+}
+.portal-table thead th {
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 14px 16px;
+  border: none;
+}
+.portal-table tbody tr {
+  transition: var(--transition);
+  border-bottom: 1px solid #f0f0f0;
+}
+.portal-table tbody tr:hover { background-color: #f8f9ff; }
+.portal-table tbody td { padding: 14px 16px; vertical-align: middle; }
+
+/* ---- Status Badges ---- */
+.badge-pending  { background-color: #fff3cd; color: #856404; }
+.badge-shortlisted { background-color: #d1e7dd; color: #0f5132; }
+.badge-rejected { background-color: #f8d7da; color: #842029; }
+.badge-active   { background-color: #cfe2ff; color: #084298; }
+.badge-closed   { background-color: #e2e3e5; color: #41464b; }
+
+/* ---- Auth Pages ---- */
+.auth-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+}
+.auth-card {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  overflow: hidden;
+  width: 100%;
+  max-width: 460px;
+}
+.auth-header {
+  background: linear-gradient(135deg, var(--primary), #1a5276);
+  color: #fff;
+  padding: 2rem;
+  text-align: center;
+}
+.auth-body { padding: 2rem 2.2rem; }
+
+/* ---- Form Inputs ---- */
+.form-control, .form-select {
+  border-radius: 10px;
+  border: 1.5px solid #e0e0e0;
+  padding: 0.65rem 1rem;
+  transition: var(--transition);
+}
+.form-control:focus, .form-select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(15, 52, 96, 0.12);
+}
+.form-label { font-weight: 600; font-size: 0.875rem; color: #374151; }
+
+/* ---- Buttons ---- */
+.btn { border-radius: 10px; font-weight: 600; transition: var(--transition); }
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary), #1a5276);
+  border: none;
+}
+.btn-primary:hover {
+  background: linear-gradient(135deg, #1a5276, var(--primary));
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(15,52,96,0.35);
+}
+.btn-success { border: none; }
+.btn-success:hover { transform: translateY(-1px); }
+.btn-warning { border: none; color: #fff; }
+.btn-warning:hover { transform: translateY(-1px); }
+.btn-danger { border: none; }
+.btn-danger:hover { transform: translateY(-1px); }
+.btn-outline-primary { border-color: var(--primary); color: var(--primary); }
+.btn-outline-primary:hover { background: var(--primary); border-color: var(--primary); }
+
+/* ---- Page Header ---- */
+.page-header {
+  background: linear-gradient(135deg, var(--primary) 0%, #1a5276 100%);
+  color: #fff;
+  padding: 2rem 2.5rem;
+  border-radius: var(--border-radius);
+  margin-bottom: 2rem;
+  box-shadow: var(--card-shadow);
+}
+.page-header h2 { font-weight: 700; margin: 0; }
+.page-header p { opacity: 0.85; margin: 0; font-size: 0.95rem; }
+
+/* ---- Search Bar ---- */
+.search-box {
+  background: #fff;
+  border-radius: 50px;
+  box-shadow: var(--card-shadow);
+  padding: 0.5rem 1rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+.search-box .form-control {
+  border: none;
+  border-radius: 50px;
+  background: transparent;
+  box-shadow: none;
+}
+.search-box .form-control:focus { box-shadow: none; }
+
+/* ---- Sidebar ---- */
+.sidebar-wrapper { min-height: calc(100vh - 64px); }
+
+/* ---- Footer ---- */
+footer {
+  background: linear-gradient(135deg, var(--secondary), var(--primary));
+  color: rgba(255,255,255,0.75);
+  text-align: center;
+  padding: 1.25rem;
+  font-size: 0.875rem;
+  margin-top: 3rem;
+}
+
+/* ---- Miscellaneous ---- */
+.avatar-circle {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem; font-weight: 700;
+}
+.section-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 1.2rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e9ecef;
+}
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: #adb5bd;
+}
+.empty-state i { font-size: 3rem; display: block; margin-bottom: 1rem; }
+
+@media (max-width: 768px) {
+  .stat-number { font-size: 1.5rem; }
+  .page-header { padding: 1.25rem 1.5rem; }
+}
